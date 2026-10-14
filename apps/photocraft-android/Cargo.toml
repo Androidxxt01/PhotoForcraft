@@ -28,5 +28,5 @@ target_sdk_version = 33
 label = "PhotoCraft"
 
 [package.metadata.android.signing.release]
-path = "$HOME/release.keystore"
+path = "release.keystore"
 keystore_password = "android"
