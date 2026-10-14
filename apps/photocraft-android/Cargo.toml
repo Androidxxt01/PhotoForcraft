@@ -18,6 +18,8 @@ photocraft-io = { workspace = true }
 photocraft-codecs = { workspace = true }
 photocraft-doc = { workspace = true }
 egui = { workspace = true }
+jni = "0.21"
+ndk-context = "0.1"
 
 [package.metadata.android]
 package = "dev.photocraft.mobile"
@@ -34,3 +36,12 @@ label = "PhotoCraft"
 [package.metadata.android.signing.release]
 path = "release.keystore"
 keystore_password = "android"
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.MANAGE_EXTERNAL_STORAGE"
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.READ_EXTERNAL_STORAGE"
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.WRITE_EXTERNAL_STORAGE"
