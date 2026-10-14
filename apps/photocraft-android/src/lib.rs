@@ -277,4 +277,42 @@ impl eframe::App for Shell {
 
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         self.app.ui(ui, frame);
-        let ctx = ui.ct
+        let ctx = ui.ctx().clone();
+        self.zoom_buttons(&ctx);
+        self.file_browser(&ctx);
+        forward_links(&ctx);
+    }
+}
+
+#[no_mangle]
+fn android_main(android_app: android_activity::AndroidApp) {
+    android_logger::init_once(
+        android_logger::Config::default().with_max_level(log::LevelFilter::Info),
+    );
+    let mut options = eframe::NativeOptions::default();
+    options.android_app = Some(android_app);
+    photocraft_ui_egui::gpu_canvas::use_adapter_limits(&mut options.wgpu_options.wgpu_setup);
+
+    let result = eframe::run_native(
+        "PhotoCraft",
+        options,
+        Box::new(|cc| {
+            let _ = CTX.set(cc.egui_ctx.clone());
+            PhotocraftApp::setup_context(&cc.egui_ctx, ThemeKind::Pro);
+            let mut app = PhotocraftApp::new(Session::new(), services());
+            app.set_theme(&cc.egui_ctx, ThemeKind::Pro);
+            if let Some(rs) = cc.wgpu_render_state.clone() {
+                app.set_wgpu(rs);
+            }
+            Ok(Box::new(Shell {
+                app,
+                zoom: START_ZOOM,
+                dir: PathBuf::from(DOWNLOAD),
+                error: None,
+            }))
+        }),
+    );
+    if let Err(e) = result {
+        log::error!("PhotoCraft saiu com erro: {e}");
+    }
+}
