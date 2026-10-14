@@ -27,7 +27,7 @@ jobs:
       - name: Gerar chave de assinatura
         run: |
           keytool -genkeypair \
-            -keystore "$HOME/release.keystore" \
+            -keystore apps/photocraft-android/release.keystore \
             -storepass android \
             -keypass android \
             -alias poc \
