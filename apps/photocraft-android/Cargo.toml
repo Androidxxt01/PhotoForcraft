@@ -14,6 +14,10 @@ eframe = { workspace = true, features = ["wgpu", "android-native-activity"] }
 log = { workspace = true }
 android-activity = { version = "0.6", features = ["native-activity"] }
 android_logger = "0.14"
+photocraft-io = { workspace = true }
+photocraft-codecs = { workspace = true }
+photocraft-doc = { workspace = true }
+egui = { workspace = true }
 
 [package.metadata.android]
 package = "dev.photocraft.mobile"
