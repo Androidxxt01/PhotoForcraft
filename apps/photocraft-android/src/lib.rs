@@ -197,9 +197,9 @@ impl Shell {
                 if ui
                     .add(egui::Button::new(big(".. (pasta acima)", s)).min_size(egui::vec2(w, 46.0 * s)))
                     .clicked()
-                    && let Some(p) = dir.parent()
                 {
-                    go = Some(p.to_path_buf());
+                    if let Some(p) = dir.parent() {
+                        go = Some(p.to_path_buf());
                 }
                 match read_entries(&dir) {
                     Err(e) => {
