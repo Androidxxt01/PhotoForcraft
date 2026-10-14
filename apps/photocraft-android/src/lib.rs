@@ -194,12 +194,14 @@ impl Shell {
                     ui.colored_label(egui::Color32::LIGHT_RED, big(e.clone(), s * 0.8));
                 }
                 let w = ui.available_width();
-                if ui
-                    .add(egui::Button::new(big(".. (pasta acima)", s)).min_size(egui::vec2(w, 46.0 * s)))
-                    .clicked()
-                {
+                let up = ui.add(
+                    egui::Button::new(big(".. (pasta acima)", s))
+                        .min_size(egui::vec2(w, 46.0 * s)),
+                );
+                if up.clicked() {
                     if let Some(p) = dir.parent() {
                         go = Some(p.to_path_buf());
+                    }
                 }
                 match read_entries(&dir) {
                     Err(e) => {
@@ -211,24 +213,31 @@ impl Shell {
                         ));
                     }
                     Ok(entries) => {
-                        egui::ScrollArea::vertical().max_height(rect.height() * 0.5).show(ui, |ui| {
-                            for (path, is_dir, name) in entries {
-                                let label = if is_dir { format!("{name}/") } else { name.clone() };
-                                if ui
-                                    .add(egui::Button::new(big(label, s)).min_size(egui::vec2(w, 46.0 * s)))
-                                    .clicked()
-                                {
-                                    if is_dir {
-                                        go = Some(path);
-                                    } else {
-                                        chosen = Some((path, name));
+                        egui::ScrollArea::vertical()
+                            .max_height(rect.height() * 0.5)
+                            .show(ui, |ui| {
+                                for (path, is_dir, name) in entries {
+                                    let label =
+                                        if is_dir { format!("{name}/") } else { name.clone() };
+                                    let b = ui.add(
+                                        egui::Button::new(big(label, s))
+                                            .min_size(egui::vec2(w, 46.0 * s)),
+                                    );
+                                    if b.clicked() {
+                                        if is_dir {
+                                            go = Some(path);
+                                        } else {
+                                            chosen = Some((path, name));
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
                     }
                 }
-                if ui.add(egui::Button::new(big("Cancelar", s)).min_size(egui::vec2(w, 46.0 * s))).clicked() {
+                let c = ui.add(
+                    egui::Button::new(big("Cancelar", s)).min_size(egui::vec2(w, 46.0 * s)),
+                );
+                if c.clicked() {
                     cancel = true;
                 }
             });
@@ -268,42 +277,4 @@ impl eframe::App for Shell {
 
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         self.app.ui(ui, frame);
-        let ctx = ui.ctx().clone();
-        self.zoom_buttons(&ctx);
-        self.file_browser(&ctx);
-        forward_links(&ctx);
-    }
-}
-
-#[no_mangle]
-fn android_main(android_app: android_activity::AndroidApp) {
-    android_logger::init_once(
-        android_logger::Config::default().with_max_level(log::LevelFilter::Info),
-    );
-    let mut options = eframe::NativeOptions::default();
-    options.android_app = Some(android_app);
-    photocraft_ui_egui::gpu_canvas::use_adapter_limits(&mut options.wgpu_options.wgpu_setup);
-
-    let result = eframe::run_native(
-        "PhotoCraft",
-        options,
-        Box::new(|cc| {
-            let _ = CTX.set(cc.egui_ctx.clone());
-            PhotocraftApp::setup_context(&cc.egui_ctx, ThemeKind::Pro);
-            let mut app = PhotocraftApp::new(Session::new(), services());
-            app.set_theme(&cc.egui_ctx, ThemeKind::Pro);
-            if let Some(rs) = cc.wgpu_render_state.clone() {
-                app.set_wgpu(rs);
-            }
-            Ok(Box::new(Shell {
-                app,
-                zoom: START_ZOOM,
-                dir: PathBuf::from(DOWNLOAD),
-                error: None,
-            }))
-        }),
-    );
-    if let Err(e) = result {
-        log::error!("PhotoCraft saiu com erro: {e}");
-    }
-              }
+        let ctx = ui.ct
