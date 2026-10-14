@@ -1,0 +1,32 @@
+[package]
+name = "photocraft-android"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+photocraft-engine = { workspace = true }
+photocraft-ui-egui = { workspace = true }
+eframe = { workspace = true, features = ["wgpu", "android-native-activity"] }
+log = { workspace = true }
+android-activity = { version = "0.6", features = ["native-activity"] }
+android_logger = "0.14"
+
+[package.metadata.android]
+package = "dev.photocraft.mobile"
+build_targets = ["aarch64-linux-android"]
+apk_name = "photocraft-android"
+
+[package.metadata.android.sdk]
+min_sdk_version = 26
+target_sdk_version = 33
+
+[package.metadata.android.application]
+label = "PhotoCraft"
+
+[package.metadata.android.signing.release]
+path = "$HOME/release.keystore"
+keystore_password = "android"
