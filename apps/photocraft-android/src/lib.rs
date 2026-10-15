@@ -280,6 +280,16 @@ impl eframe::App for Shell {
         self.zoom_buttons(&ctx);
         self.file_browser(&ctx);
         forward_links(&ctx);
+        egui::Area::new(egui::Id::new("dbg"))
+            .anchor(egui::Align2::LEFT_BOTTOM, egui::vec2(8.0, -8.0))
+            .show(&ctx, |ui| {
+                ui.label(format!(
+                    "zoom {:.2} | ppp {:.2} | largura {:.0}",
+                    ctx.zoom_factor(),
+                    ctx.pixels_per_point(),
+                    ctx.content_rect().width()
+                ));
+            });
         // Por ultimo, para vencer o zoom que o editor redefine.
         ctx.set_zoom_factor(self.zoom);
     }
