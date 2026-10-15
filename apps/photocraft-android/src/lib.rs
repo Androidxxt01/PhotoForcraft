@@ -160,11 +160,11 @@ impl Shell {
             .anchor(egui::Align2::RIGHT_BOTTOM, egui::vec2(-8.0 * s, -8.0 * s))
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
-                    let size = egui::vec2(52.0 * s, 52.0 * s);
-                    if ui.add(egui::Button::new(big("A-", s)).min_size(size)).clicked() {
+                    let size = egui::vec2(34.0 * s, 34.0 * s);
+                    if ui.add(egui::Button::new(big("A-", s * 0.7)).min_size(size)).clicked() {
                         self.zoom = (self.zoom - 0.1).max(0.3);
                     }
-                    if ui.add(egui::Button::new(big("A+", s)).min_size(size)).clicked() {
+                    if ui.add(egui::Button::new(big("A+", s * 0.7)).min_size(size)).clicked() {
                         self.zoom = (self.zoom + 0.1).min(1.5);
                     }
                 });
