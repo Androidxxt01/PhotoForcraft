@@ -271,7 +271,6 @@ impl Shell {
 
 impl eframe::App for Shell {
     fn logic(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        ctx.set_zoom_factor(self.zoom);
         self.app.logic(ctx, frame);
     }
 
@@ -281,6 +280,8 @@ impl eframe::App for Shell {
         self.zoom_buttons(&ctx);
         self.file_browser(&ctx);
         forward_links(&ctx);
+        // Por ultimo, para vencer o zoom que o editor redefine.
+        ctx.set_zoom_factor(self.zoom);
     }
 }
 
